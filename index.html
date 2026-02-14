@@ -15,6 +15,7 @@
       <ul class="nav-links">
         <li><a href="index.html" class="active">Home</a></li>
         <li><a href="journey.html">Journey</a></li>
+        <li><a href="about.html">About Me</a></li>
       </ul>
       <div class="nav-socials">
         <a href="https://www.linkedin.com/in/skim02/" target="_blank" aria-label="LinkedIn"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></a>
@@ -24,37 +25,135 @@
   </nav>
 
   <main>
+    <!-- ========== HERO — Stroke-Draw Name + Magnetic Letters + Floating Words ========== -->
     <section class="hero">
       <div class="blob blob-1"></div>
       <div class="blob blob-2"></div>
-      <div class="container hero-content">
-        <h1>It's <span class="accent">Sean</span></h1>
-        <div class="rotating-words">
-          <span class="rotate-word active">builder</span>
-          <span class="rotate-word">creator</span>
-          <span class="rotate-word">dreamer</span>
-          <span class="rotate-word">isfj</span>
-          <span class="rotate-word">just me</span>
+      <span class="hero-word hw-xl" style="left:6%;top:18%">builder</span>
+      <span class="hero-word hw-xl" style="left:72%;top:10%">creator</span>
+      <span class="hero-word hw-lg" style="left:14%;top:68%">dreamer</span>
+      <span class="hero-word hw-sm" style="left:80%;top:72%">isfj</span>
+      <span class="hero-word hw-lg" style="left:68%;top:42%">just me</span>
+      <span class="hero-word hw-md" style="left:4%;top:42%">learner</span>
+      <div class="hero-inner">
+        <p class="hero-pre">it's</p>
+        <div class="name-stage" id="nameStage">
+          <span class="name-letter" style="--i:0">S</span>
+          <span class="name-letter" style="--i:1">E</span>
+          <span class="name-letter" style="--i:2">A</span>
+          <span class="name-letter" style="--i:3">N</span>
         </div>
-        <p class="verse">Hebrews 12:11 — At the time all discipline seems a cause not for joy, but for pain. Yet later it brings the peaceful fruit of righteousness to those who are trained by it.</p>
+      </div>
+      <div class="scroll-cue" id="scrollCue">
+        <span>scroll</span>
+        <svg width="14" height="20" viewBox="0 0 14 20" fill="none">
+          <path d="M7 0v16M1 11l6 6 6-6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+    </section>
+
+    <!-- ========== BENTO GRID — Interactive Cards ========== -->
+    <section class="bento-section reveal-section" id="bentoSection">
+      <div class="container">
+        <p class="section-label">explore</p>
+        <div class="bento-grid">
+          <a href="journey.html" class="bento-card bento-journey">
+            <span class="bento-icon">&#8599;</span>
+            <span class="bento-title">My Journey</span>
+            <p>The path that shaped who I am today.</p>
+          </a>
+          <a href="about.html" class="bento-card bento-aboutme">
+            <span class="bento-icon">&#8599;</span>
+            <span class="bento-title">About Me</span>
+            <p>My story, in my own words.</p>
+          </a>
+          <div class="bento-card bento-verse">
+            <span class="bento-title">Hebrews 12:11</span>
+            <p class="verse-text">At the time all discipline seems a cause not for joy, but for pain. Yet later it brings the peaceful fruit of righteousness to those who are trained by it.</p>
+          </div>
+          <div class="bento-card bento-role">
+            <span class="bento-title">Currently</span>
+            <p>Growth @ Chestnut</p>
+            <p>Building...</p>
+          </div>
+        </div>
       </div>
     </section>
   </main>
 
   <footer>
     <div class="container">
-      <p>&copy; 2026 Portfolio. All rights reserved.</p>
+      <p>&copy; 2026 Sean. All rights reserved.</p>
     </div>
   </footer>
 
   <script>
-    const words = document.querySelectorAll('.rotate-word');
-    let current = 0;
-    setInterval(() => {
-      words[current].classList.remove('active');
-      current = (current + 1) % words.length;
-      words[current].classList.add('active');
-    }, 1200);
+    document.addEventListener('DOMContentLoaded', () => {
+
+      /* ===== 1. Name — Stroke-Draw & Magnetic Effect ===== */
+      const nameStage = document.getElementById('nameStage');
+      const letters = nameStage.querySelectorAll('.name-letter');
+      const isMobile = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+      let magneticReady = false;
+
+      // After stroke-draw animations finish, switch to magnetic mode
+      setTimeout(() => {
+        magneticReady = true;
+        letters.forEach(l => {
+          l.classList.add('magnetic-ready');
+        });
+      }, 1800);
+
+      if (!isMobile) {
+        nameStage.addEventListener('mousemove', (e) => {
+          if (!magneticReady) return;
+          letters.forEach(letter => {
+            const lr = letter.getBoundingClientRect();
+            const cx = lr.left + lr.width / 2;
+            const cy = lr.top + lr.height / 2;
+            const dx = cx - e.clientX;
+            const dy = cy - e.clientY;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+            const maxDist = 180;
+            if (dist < maxDist) {
+              const force = (1 - dist / maxDist) * 30;
+              const angle = Math.atan2(dy, dx);
+              letter.style.transform = 'translate(' + (Math.cos(angle) * force) + 'px, ' + (Math.sin(angle) * force) + 'px)';
+            } else {
+              letter.style.transform = 'translate(0, 0)';
+            }
+          });
+        });
+
+        nameStage.addEventListener('mouseleave', () => {
+          if (!magneticReady) return;
+          letters.forEach(l => { l.style.transform = 'translate(0, 0)'; });
+        });
+      }
+
+      /* ===== 2. Scroll Reveal ===== */
+      const revealSections = document.querySelectorAll('.reveal-section');
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('revealed');
+          }
+        });
+      }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+
+      revealSections.forEach(el => observer.observe(el));
+
+      /* ===== 4. Scroll Cue — Hide on Scroll ===== */
+      const scrollCue = document.getElementById('scrollCue');
+      let cueHidden = false;
+      window.addEventListener('scroll', () => {
+        if (!cueHidden && window.scrollY > 80) {
+          scrollCue.classList.add('hidden');
+          cueHidden = true;
+        }
+      }, { passive: true });
+
+    });
   </script>
 </body>
 </html>
